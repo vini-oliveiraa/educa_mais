@@ -1,0 +1,21 @@
+{
+  "name": "Educa+ — Aprenda jogando",
+  "short_name": "Educa+",
+  "description": "Plataforma gamificada de estudos para o Ensino Fundamental 2.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080c1c",
+  "theme_color": "#080c1c",
+  "lang": "pt-BR",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

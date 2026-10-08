@@ -1,0 +1,85 @@
+/* ============================================================
+   Educa+ — Design tokens
+   Identidade visual extraída da apresentação ESTUDA+ (PDF):
+   fundo azul-marinho profundo com brilhos magenta/azul, títulos
+   em amarelo-ouro, destaques ciano, cards escuros com borda neon.
+   ============================================================ */
+
+:root {
+  /* ---- Superfícies ---- */
+  --bg-900: #070b1a;
+  --bg-800: #0b1228;
+  --bg-700: #101a3a;
+  --panel: #151e3c;
+  --panel-2: #1b2550;
+  --panel-3: #222e62;
+  --line: #2a3663;
+  --line-soft: #202a52;
+
+  /* ---- Cores de marca ---- */
+  --cyan: #29c6f7;
+  --cyan-dark: #0b8fc7;
+  --gold: #ffc93c;
+  --gold-dark: #e09b12;
+  --pink: #ff3d8b;
+  --pink-dark: #c01d61;
+  --purple: #9b5cf6;
+  --purple-dark: #6d31d0;
+  --green: #2ee6a8;
+  --green-dark: #11a177;
+  --red: #ff4d6d;
+  --red-dark: #c01f3d;
+  --orange: #ff9f45;
+
+  /* ---- Texto ---- */
+  --text: #eef2ff;
+  --text-soft: #c3cbf0;
+  --muted: #8e9ac9;
+  --muted-2: #6c78a8;
+
+  /* ---- Tipografia ---- */
+  --font-display: 'Fredoka', 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* ---- Raios ---- */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* ---- Sombras / brilhos ---- */
+  --glow-cyan: 0 0 0 1px rgba(41, 198, 247, 0.5), 0 0 22px -4px rgba(41, 198, 247, 0.55);
+  --glow-gold: 0 0 0 1px rgba(255, 201, 60, 0.5), 0 0 22px -4px rgba(255, 201, 60, 0.5);
+  --glow-pink: 0 0 0 1px rgba(255, 61, 139, 0.5), 0 0 22px -4px rgba(255, 61, 139, 0.5);
+  --glow-green: 0 0 0 1px rgba(46, 230, 168, 0.5), 0 0 22px -4px rgba(46, 230, 168, 0.5);
+  --shadow-card: 0 14px 34px -18px rgba(0, 0, 0, 0.9);
+  --shadow-pop: 0 20px 48px -20px rgba(0, 0, 0, 0.95);
+
+  /* ---- Gradientes ---- */
+  --grad-brand: linear-gradient(100deg, var(--cyan), var(--purple) 52%, var(--pink));
+  --grad-gold: linear-gradient(100deg, #ffe08a, var(--gold) 45%, #f59a0b);
+  --grad-card: linear-gradient(160deg, rgba(41, 198, 247, 0.1), rgba(155, 92, 246, 0.05) 60%, transparent);
+
+  /* ---- Layout ---- */
+  --shell-max: 1180px;
+  --gutter: 16px;
+  --nav-h: 66px;
+  --top-h: 60px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  /* ---- Cores por matéria (usadas em cards, badges e gráficos) ---- */
+  --sub-matematica: #29c6f7;
+  --sub-portugues: #ff3d8b;
+  --sub-ciencias: #2ee6a8;
+  --sub-historia: #ffc93c;
+  --sub-geografia: #9b5cf6;
+  --sub-ingles: #ff9f45;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --gutter: 24px;
+  }
+}

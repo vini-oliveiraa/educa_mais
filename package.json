@@ -1,0 +1,25 @@
+{
+  "name": "educa-mais",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Educa+ — plataforma gamificada de estudos para o Ensino Fundamental 2 (6º ao 9º ano)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "stats": "node scripts/bank-stats.mjs",
+    "smoke": "vite build --ssr scripts/ssr-smoke.jsx --outDir .smoke --logLevel warn && node .smoke/ssr-smoke.js",
+    "check": "npm run stats && npm run smoke"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
