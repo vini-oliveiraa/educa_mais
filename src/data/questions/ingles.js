@@ -184,25 +184,29 @@ export default [
     grade: 6, subject: 'ingles', bncc: 'EF06LI22',
     topic: "Genitive case ('s)", level: 2, variants: 100,
     gen(r) {
+      // `pt` já vem com a preposição contraída (de + o = do, de + os = dos),
+      // senão o enunciado sairia como "o livro de o professor".
       const donos = [
-        { en: 'Peter', pt: 'Peter', pl: false },
-        { en: 'Maria', pt: 'Maria', pl: false },
-        { en: 'my sister', pt: 'minha irmã', pl: false },
-        { en: 'the teacher', pt: 'o professor', pl: false },
-        { en: 'Lucas', pt: 'Lucas', pl: false },
-        { en: 'my parents', pt: 'meus pais', pl: true },
-        { en: 'the students', pt: 'os alunos', pl: true },
+        { en: 'Peter', pt: 'de Peter', pl: false },
+        { en: 'Maria', pt: 'de Maria', pl: false },
+        { en: 'my sister', pt: 'da minha irmã', pl: false },
+        { en: 'the teacher', pt: 'do professor', pl: false },
+        { en: 'Lucas', pt: 'de Lucas', pl: false },
+        { en: 'my parents', pt: 'dos meus pais', pl: true },
+        { en: 'the students', pt: 'dos alunos', pl: true },
       ]
+      // `g` é o gênero do substantivo em português, para o artigo concordar.
       const coisas = [
-        { en: 'book', pt: 'livro' }, { en: 'car', pt: 'carro' }, { en: 'house', pt: 'casa' },
-        { en: 'backpack', pt: 'mochila' }, { en: 'phone', pt: 'celular' }, { en: 'bicycle', pt: 'bicicleta' },
+        { en: 'book', pt: 'livro', g: 'o' }, { en: 'car', pt: 'carro', g: 'o' },
+        { en: 'house', pt: 'casa', g: 'a' }, { en: 'backpack', pt: 'mochila', g: 'a' },
+        { en: 'phone', pt: 'celular', g: 'o' }, { en: 'bicycle', pt: 'bicicleta', g: 'a' },
       ]
       const dono = r.pick(donos)
       const coisa = r.pick(coisas)
       // Plural terminado em -s leva só o apóstrofo; os demais levam 's.
       const certo = dono.pl ? `${dono.en}' ${coisa.en}` : `${dono.en}'s ${coisa.en}`
       return mc({
-        prompt: `Choose the correct way to express possession:\n\n"o ${coisa.pt} de ${dono.pt}"`,
+        prompt: `Choose the correct way to express possession:\n\n"${coisa.g} ${coisa.pt} ${dono.pt}"`,
         answer: certo,
         wrong: take3(certo, [
           dono.pl ? `${dono.en}'s ${coisa.en}` : `${dono.en}' ${coisa.en}`,

@@ -1,0 +1,249 @@
+{
+  "state": {
+    "profile": {
+      "name": "Beatriz",
+      "avatar": "🦊",
+      "grade": 6,
+      "createdAt": 1790294950757
+    },
+    "coins": 3250,
+    "xp": 7400,
+    "stats": {
+      "missions": 38,
+      "correct": 287,
+      "wrong": 61,
+      "perfects": 9,
+      "masterPerfects": 2,
+      "bestCombo": 14,
+      "bySubject": {
+        "matematica": {
+          "missions": 6,
+          "correct": 40,
+          "wrong": 9,
+          "bestScore": 100
+        },
+        "portugues": {
+          "missions": 7,
+          "correct": 47,
+          "wrong": 10,
+          "bestScore": 88
+        },
+        "ciencias": {
+          "missions": 8,
+          "correct": 54,
+          "wrong": 11,
+          "bestScore": 75
+        },
+        "historia": {
+          "missions": 9,
+          "correct": 61,
+          "wrong": 12,
+          "bestScore": 92
+        },
+        "geografia": {
+          "missions": 10,
+          "correct": 68,
+          "wrong": 13,
+          "bestScore": 80
+        },
+        "ingles": {
+          "missions": 11,
+          "correct": 75,
+          "wrong": 14,
+          "bestScore": 85
+        }
+      }
+    },
+    "streak": {
+      "current": 7,
+      "best": 11,
+      "lastDay": "2026-10-19"
+    },
+    "today": {
+      "day": "2026-10-19",
+      "correct": 12,
+      "missions": 2,
+      "perfects": 1,
+      "builds": 1,
+      "combo": 5,
+      "subjects": [
+        "matematica",
+        "ingles"
+      ],
+      "subjectMissions": {
+        "matematica": 1,
+        "ingles": 1
+      },
+      "claimed": []
+    },
+    "city": {
+      "buildings": [
+        {
+          "id": "escola-0",
+          "type": "escola",
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "biblioteca-1",
+          "type": "biblioteca",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "hospital-2",
+          "type": "hospital",
+          "x": 5,
+          "y": 4
+        },
+        {
+          "id": "casa-3",
+          "type": "casa",
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "casa-4",
+          "type": "casa",
+          "x": 5,
+          "y": 3
+        },
+        {
+          "id": "sobrado-5",
+          "type": "sobrado",
+          "x": 4,
+          "y": 3
+        },
+        {
+          "id": "predio-6",
+          "type": "predio",
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "loja-7",
+          "type": "loja",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "padaria-8",
+          "type": "padaria",
+          "x": 5,
+          "y": 5
+        },
+        {
+          "id": "fonte-9",
+          "type": "fonte",
+          "x": 4,
+          "y": 5
+        },
+        {
+          "id": "parque-10",
+          "type": "parque",
+          "x": 2,
+          "y": 5
+        },
+        {
+          "id": "lago-11",
+          "type": "lago",
+          "x": 6,
+          "y": 6
+        },
+        {
+          "id": "arvore-12",
+          "type": "arvore",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "arvore-13",
+          "type": "arvore",
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "arvore-14",
+          "type": "arvore",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "id": "arvore-15",
+          "type": "arvore",
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "canteiro-16",
+          "type": "canteiro",
+          "x": 3,
+          "y": 6
+        },
+        {
+          "id": "canteiro-17",
+          "type": "canteiro",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "id": "poste-18",
+          "type": "poste",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "id": "poste-19",
+          "type": "poste",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "laboratorio-20",
+          "type": "laboratorio",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "id": "observatorio-21",
+          "type": "observatorio",
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "estadio-22",
+          "type": "estadio",
+          "x": 3,
+          "y": 2
+        },
+        {
+          "id": "monumento-23",
+          "type": "monumento",
+          "x": 5,
+          "y": 2
+        }
+      ]
+    },
+    "achievements": [
+      "first-mission",
+      "ten-correct",
+      "hundred-correct",
+      "perfect",
+      "perfect-5",
+      "combo-8",
+      "streak-3",
+      "streak-7",
+      "builder-1",
+      "builder-10",
+      "builder-25",
+      "rich",
+      "level-5",
+      "level-10",
+      "city-planner"
+    ],
+    "settings": {
+      "sound": true
+    }
+  },
+  "version": 1
+}

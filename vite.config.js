@@ -21,6 +21,12 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (/node_modules[/\\](react|react-dom|scheduler)[/\\]/.test(id)) return 'vendor-react'
+            // O SDK do Supabase fica FORA do chunk vendor de propósito: ele é
+            // carregado por import() dinâmico e só deve baixar no modo nuvem.
+            // Agrupá-lo no vendor faria todo mundo pagar 66 kB sem usar.
+            if (id.includes('@supabase') || id.includes('@noble') || id.includes('whatwg-url')) {
+              return undefined
+            }
             return 'vendor'
           }
           if (id.includes('/src/data/questions/')) return 'banco-questoes'

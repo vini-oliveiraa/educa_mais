@@ -6,6 +6,7 @@ import { Toasts, Confetti } from './components/ui.jsx'
 import AppShell from './components/AppShell.jsx'
 
 import Onboarding from './screens/Onboarding.jsx'
+import ClassLogin from './screens/ClassLogin.jsx'
 import Home from './screens/Home.jsx'
 import Subjects from './screens/Subjects.jsx'
 import MissionSetup from './screens/MissionSetup.jsx'
@@ -19,7 +20,7 @@ import Profile from './screens/Profile.jsx'
 const City = lazy(() => import('./screens/City.jsx'))
 
 /** Telas que ocupam a janela inteira, sem barra superior nem navegação. */
-const FULLSCREEN = new Set(['onboarding', 'quiz', 'result'])
+const FULLSCREEN = new Set(['onboarding', 'entrar-turma', 'carregando', 'quiz', 'result'])
 
 export default function App() {
   const screen = useGame((s) => s.screen)
@@ -29,6 +30,8 @@ export default function App() {
   const dismissToast = useGame((s) => s.dismissToast)
   const refreshDay = useGame((s) => s.refreshDay)
   const missionLoading = useGame((s) => s.missionLoading)
+  const cloudStatus = useGame((s) => s.cloudStatus)
+  const initCloud = useGame((s) => s.initCloud)
 
   // Vira o dia enquanto o app está aberto (e ao voltar para a aba).
   useEffect(() => {
@@ -43,10 +46,23 @@ export default function App() {
     prefetchBank()
   }, [])
 
-  const active = !profile ? 'onboarding' : screen
+  // Decide entre modo local e modo nuvem (ver services/cloudSync.js).
+  useEffect(() => {
+    initCloud()
+  }, [initCloud])
+
+  // No modo nuvem o aluno entra pela turma; no modo local, pelo onboarding.
+  let active = screen
+  if (cloudStatus === 'checking') active = 'carregando'
+  else if (cloudStatus === 'needs-login') active = 'entrar-turma'
+  else if (!profile) active = 'onboarding'
 
   const content = (() => {
     switch (active) {
+      case 'carregando':
+        return <TelaCarregando />
+      case 'entrar-turma':
+        return <ClassLogin />
       case 'onboarding':
         return <Onboarding />
       case 'subjects':
@@ -86,6 +102,18 @@ function CityFallback() {
   return (
     <div className="city" style={{ display: 'grid', placeItems: 'center' }}>
       <span className="muted small">Carregando sua cidade…</span>
+    </div>
+  )
+}
+
+function TelaCarregando() {
+  return (
+    <div className="onb" role="status" aria-live="polite">
+      <div className="boot-logo">EDUCA+</div>
+      <div className="boot-bar">
+        <span />
+      </div>
+      <p className="tiny muted">Conectando à sua turma…</p>
     </div>
   )
 }

@@ -409,23 +409,25 @@ export default [
     grade: 6, subject: 'matematica', bncc: 'EF06MA17',
     topic: 'Prismas e pirâmides', level: 3, variants: 60,
     gen(r) {
+      // `art` evita "um pirâmide"; o rótulo carrega o próprio "Quantos/Quantas"
+      // porque vértice é masculino e face/aresta são femininos.
       const solidos = [
-        { nome: 'cubo', v: 8, f: 6, a: 12 },
-        { nome: 'prisma de base triangular', v: 6, f: 5, a: 9 },
-        { nome: 'prisma de base pentagonal', v: 10, f: 7, a: 15 },
-        { nome: 'prisma de base hexagonal', v: 12, f: 8, a: 18 },
-        { nome: 'pirâmide de base quadrada', v: 5, f: 5, a: 8 },
-        { nome: 'pirâmide de base triangular', v: 4, f: 4, a: 6 },
-        { nome: 'pirâmide de base pentagonal', v: 6, f: 6, a: 10 },
-        { nome: 'pirâmide de base hexagonal', v: 7, f: 7, a: 12 },
+        { nome: 'cubo', art: 'um', v: 8, f: 6, a: 12 },
+        { nome: 'prisma de base triangular', art: 'um', v: 6, f: 5, a: 9 },
+        { nome: 'prisma de base pentagonal', art: 'um', v: 10, f: 7, a: 15 },
+        { nome: 'prisma de base hexagonal', art: 'um', v: 12, f: 8, a: 18 },
+        { nome: 'pirâmide de base quadrada', art: 'uma', v: 5, f: 5, a: 8 },
+        { nome: 'pirâmide de base triangular', art: 'uma', v: 4, f: 4, a: 6 },
+        { nome: 'pirâmide de base pentagonal', art: 'uma', v: 6, f: 6, a: 10 },
+        { nome: 'pirâmide de base hexagonal', art: 'uma', v: 7, f: 7, a: 12 },
       ]
       const s = r.pick(solidos)
       const campo = r.pick(['v', 'f', 'a'])
-      const rotulo = { v: 'vértices', f: 'faces', a: 'arestas' }[campo]
+      const rotulo = { v: 'Quantos vértices', f: 'Quantas faces', a: 'Quantas arestas' }[campo]
       return input({
-        prompt: `Quantas ${rotulo} tem um ${s.nome}?`,
+        prompt: `${rotulo} tem ${s.art} ${s.nome}?`,
         answer: s[campo],
-        why: `O ${s.nome} tem ${s.v} vértices, ${s.f} faces e ${s.a} arestas. Confere na relação de Euler: V + F − A = ${s.v} + ${s.f} − ${s.a} = 2.`,
+        why: `${s.art === 'uma' ? 'A' : 'O'} ${s.nome} tem ${s.v} vértices, ${s.f} faces e ${s.a} arestas. Confere na relação de Euler: V + F − A = ${s.v} + ${s.f} − ${s.a} = 2.`,
       })
     },
   }),

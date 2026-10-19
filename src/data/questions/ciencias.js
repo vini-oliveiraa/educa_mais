@@ -53,31 +53,36 @@ export default [
     grade: 6, subject: 'ciencias', bncc: 'EF06CI05',
     topic: 'Célula', level: 1, variants: 80,
     gen(r) {
+      // `f: true` marca as organelas de nome feminino, para artigo e contração
+      // concordarem em vez de sair o remendo "do(a)".
       const itens = [
         { org: 'Núcleo', fun: 'Armazena o material genético (DNA) e comanda a célula' },
-        { org: 'Mitocôndria', fun: 'Produz energia por meio da respiração celular' },
-        { org: 'Membrana plasmática', fun: 'Controla a entrada e a saída de substâncias' },
+        { org: 'Mitocôndria', f: true, fun: 'Produz energia por meio da respiração celular' },
+        { org: 'Membrana plasmática', f: true, fun: 'Controla a entrada e a saída de substâncias' },
         { org: 'Citoplasma', fun: 'Meio gelatinoso onde ficam as organelas' },
         { org: 'Cloroplasto', fun: 'Realiza a fotossíntese nas células vegetais' },
-        { org: 'Parede celular', fun: 'Dá rigidez e sustentação à célula vegetal' },
+        { org: 'Parede celular', f: true, fun: 'Dá rigidez e sustentação à célula vegetal' },
         { org: 'Ribossomo', fun: 'Produz proteínas' },
         { org: 'Vacúolo', fun: 'Armazena água e outras substâncias' },
       ]
       const item = r.pick(itens)
+      const nome = item.org.toLowerCase()
+      const de = item.f ? 'da' : 'do'
+      const o = item.f ? 'A' : 'O'
       const pedeFuncao = r.chance(0.6)
       if (pedeFuncao) {
         return mc({
-          prompt: `Qual é a principal função do(a) ${item.org.toLowerCase()}?`,
+          prompt: `Qual é a principal função ${de} ${nome}?`,
           answer: item.fun,
           wrong: pickWrong(r, itens.map((i) => i.fun), item.fun),
-          why: `O(A) ${item.org.toLowerCase()} ${item.fun.toLowerCase()}.`,
+          why: `${o} ${nome} ${item.fun.toLowerCase()}.`,
         })
       }
       return mc({
         prompt: `Qual estrutura celular tem a função de "${item.fun.toLowerCase()}"?`,
         answer: item.org,
         wrong: pickWrong(r, itens.map((i) => i.org), item.org),
-        why: `Essa é a função do(a) ${item.org.toLowerCase()}.`,
+        why: `Essa é a função ${de} ${nome}.`,
       })
     },
   }),
@@ -423,18 +428,18 @@ export default [
       const itens = [
         { ap: 'chuveiro elétrico', tr: 'Elétrica → térmica' },
         { ap: 'ventilador', tr: 'Elétrica → mecânica (cinética)' },
-        { ap: 'lâmpada', tr: 'Elétrica → luminosa (e térmica)' },
-        { ap: 'caixa de som', tr: 'Elétrica → sonora' },
+        { ap: 'lâmpada', f: true, tr: 'Elétrica → luminosa (e térmica)' },
+        { ap: 'caixa de som', f: true, tr: 'Elétrica → sonora' },
         { ap: 'painel solar fotovoltaico', tr: 'Luminosa → elétrica' },
-        { ap: 'pilha', tr: 'Química → elétrica' },
-        { ap: 'usina hidrelétrica', tr: 'Mecânica (cinética) → elétrica' },
+        { ap: 'pilha', f: true, tr: 'Química → elétrica' },
+        { ap: 'usina hidrelétrica', f: true, tr: 'Mecânica (cinética) → elétrica' },
       ]
       const item = r.pick(itens)
       return mc({
-        prompt: `Qual transformação de energia ocorre principalmente em um(a) ${item.ap}?`,
+        prompt: `Qual transformação de energia ocorre principalmente em ${item.f ? 'uma' : 'um'} ${item.ap}?`,
         answer: item.tr,
         wrong: pickWrong(r, itens.map((i) => i.tr), item.tr),
-        why: `No(a) ${item.ap} a transformação principal é: ${item.tr}.`,
+        why: `${item.f ? 'Na' : 'No'} ${item.ap} a transformação principal é: ${item.tr}.`,
       })
     },
   }),

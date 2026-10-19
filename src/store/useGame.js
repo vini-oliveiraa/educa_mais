@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 import { storage, STORAGE_KEY } from '../services/persistence.js'
+import * as cloud from '../services/cloudSync.js'
 import { buildMission } from '../engine/quizEngine.js'
 import { rewardForAnswer, missionBonus, dailyMissionsFor, dailyProgress } from '../engine/progression.js'
 import { checkAnswer, revealAnswer } from '../lib/answerVault.js'
@@ -50,11 +51,14 @@ const INITIAL = {
 
 // Estado de sessão (não persiste)
 const SESSION = {
+  // 'local' | 'checking' | 'needs-login' | 'ready' | 'offline'
+  cloudStatus: cloud.cloudEnabled ? 'checking' : 'local',
   screen: 'home',
   pendingSubject: null, // matéria escolhida, aguardando o nível da missão
   missionLoading: false, // banco de questões sendo baixado/gerado
   mission: null,
   questionIndex: 0,
+  missionGains: { coins: 0, xp: 0 }, // acumulado da missão atual, para o espelho na nuvem
   lastAnswer: null, // { correct, reveal, gains, guess }
   missionLog: [], // histórico da missão atual, para a tela de revisão
   result: null,
@@ -72,6 +76,69 @@ export const useGame = create(
     (set, get) => ({
       ...INITIAL,
       ...SESSION,
+
+      // ---------------------------------------------------------- nuvem
+      /**
+       * Decide o modo do app na abertura.
+       *   'local'       — sem Supabase configurado: tudo no localStorage.
+       *   'needs-login' — nuvem ligada, mas o aluno ainda não entrou na turma.
+       *   'ready'       — sessão ativa e estado já puxado do servidor.
+       */
+      initCloud: async () => {
+        if (!cloud.cloudEnabled) {
+          set({ cloudStatus: 'local' })
+          return
+        }
+        set({ cloudStatus: 'checking' })
+        try {
+          await cloud.garantirSessao()
+          const aluno = await cloud.alunoAtual()
+          if (!aluno) {
+            set({ cloudStatus: 'needs-login' })
+            return
+          }
+          await get().hydrateFromCloud()
+        } catch (e) {
+          // Sem rede na abertura: cai para o que está salvo no device.
+          console.warn('[Educa+ nuvem] init:', e?.message ?? e)
+          set({ cloudStatus: get().profile ? 'offline' : 'needs-login' })
+        }
+      },
+
+      /** Puxa o estado do servidor e sobrescreve o local. */
+      hydrateFromCloud: async () => {
+        const remoto = await cloud.carregarEstado()
+        if (!remoto) {
+          set({ cloudStatus: 'needs-login' })
+          return
+        }
+        set((s) => ({
+          profile: remoto.profile,
+          coins: remoto.coins,
+          xp: remoto.xp,
+          streak: remoto.streak,
+          city: remoto.city,
+          achievements: remoto.achievements,
+          // O servidor é dono dos totais; o detalhamento por matéria continua
+          // local (dá para derivar de `respostas`, mas não vale a consulta).
+          stats: { ...s.stats, ...remoto.statsParciais },
+          cloudStatus: 'ready',
+          screen: 'home',
+        }))
+      },
+
+      /** Entra numa turma pelo código. Propaga o erro para a tela de login. */
+      joinClass: async ({ codigo, apelido, avatar, serie }) => {
+        await cloud.entrarNaTurma({ codigo, apelido, avatar, serie })
+        await get().hydrateFromCloud()
+        get().toast(`Bem-vindo, ${apelido}!`, 'gold', '🎉')
+      },
+
+      /** Sai da turma e volta para a tela de entrada. */
+      leaveClass: async () => {
+        await cloud.sair()
+        set({ ...INITIAL, today: emptyToday(dayKey()), ...SESSION, cloudStatus: 'needs-login' })
+      },
 
       // ---------------------------------------------------- navegação / UI
       go: (screen) => set({ screen, lastAnswer: null }),
@@ -97,8 +164,11 @@ export const useGame = create(
       setGrade: (grade) =>
         set((s) => ({ profile: s.profile ? { ...s.profile, grade } : s.profile })),
 
-      updateProfile: (patch) =>
-        set((s) => ({ profile: s.profile ? { ...s.profile, ...patch } : s.profile })),
+      updateProfile: (patch) => {
+        set((s) => ({ profile: s.profile ? { ...s.profile, ...patch } : s.profile }))
+        const p = get().profile
+        if (p) cloud.salvarPerfil(p)
+      },
 
       resetProgress: () => {
         set({ ...INITIAL, today: emptyToday(dayKey()), ...SESSION, screen: 'onboarding' })
@@ -126,6 +196,7 @@ export const useGame = create(
           set({
             mission: { ...mission, startedAt: Date.now() },
             questionIndex: 0,
+            missionGains: { coins: 0, xp: 0 },
             lastAnswer: null,
             missionLog: [],
             result: null,
@@ -164,10 +235,24 @@ export const useGame = create(
         set((s) => ({
           coins: s.coins + gains.coins,
           xp: s.xp + gains.xp,
+          missionGains: {
+            coins: s.missionGains.coins + gains.coins,
+            xp: s.missionGains.xp + gains.xp,
+          },
           lastAnswer: { correct, guess, reveal, gains },
           missionLog: [
             ...s.missionLog,
-            { uid: question.uid, prompt: question.prompt, topic: question.topic, bncc: question.bncc, correct, guess, answer: reveal?.answer ?? '', explanation: reveal?.explanation ?? '' },
+            {
+              uid: question.uid,
+              templateId: question.templateId,
+              prompt: question.prompt,
+              topic: question.topic,
+              bncc: question.bncc,
+              correct,
+              guess,
+              answer: reveal?.answer ?? '',
+              explanation: reveal?.explanation ?? '',
+            },
           ],
           today: {
             ...s.today,
@@ -279,6 +364,21 @@ export const useGame = create(
 
         if (bonus.perfect) get().fireConfetti()
         get().checkAchievements()
+
+        // Espelha na nuvem (no-op em modo local). Deliberadamente sem await:
+        // a tela de resultado não espera a rede.
+        cloud.salvarMissao({
+          moedas: state.missionGains.coins + bonus.coins,
+          xp: state.missionGains.xp + bonus.xp,
+          acertos: correct,
+          erros: total - correct,
+          gabaritou: bonus.perfect,
+          combo: get().stats.bestCombo,
+          log: missionLog,
+          materia: subject,
+          serie: state.profile?.grade ?? mission.grade,
+          nivel: mission.difficulty,
+        })
       },
 
       // ---------------------------------------------------- cidade
@@ -314,6 +414,7 @@ export const useGame = create(
         }))
         get().toast(`${def.name} construída!`, 'green', '🏗️')
         get().checkAchievements()
+        cloud.salvarConstrucao({ type: typeId, x, y })
         return true
       },
 
@@ -328,6 +429,7 @@ export const useGame = create(
           city: { ...s.city, buildings: s.city.buildings.filter((x) => x.id !== buildingId) },
         }))
         get().toast(`${def?.name ?? 'Construção'} demolida. +${refund} moedas.`, 'gold', '🧨')
+        cloud.removerConstrucao({ x: b.x, y: b.y })
       },
 
       // ---------------------------------------------------- missões diárias
@@ -365,6 +467,7 @@ export const useGame = create(
 
         set({ achievements: [...s.achievements, ...novas.map((a) => a.id)] })
         novas.forEach((a) => get().toast(`Conquista desbloqueada: ${a.name}`, 'gold', a.icon))
+        cloud.salvarConquistas(novas.map((a) => a.id))
       },
 
       // ---------------------------------------------------- manutenção do dia
