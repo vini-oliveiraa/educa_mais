@@ -26,8 +26,8 @@ export const NUMEROS = [
   { valor: '~145 mil', rotulo: 'questões diferentes possíveis' },
   { valor: '234', rotulo: 'habilidades da BNCC' },
   { valor: '6 × 4', rotulo: 'matérias × anos escolares' },
-  { valor: '14.309', rotulo: 'questões auditadas sem erro' },
-  { valor: 'R$ 0,00', rotulo: 'custo de produção' },
+  { valor: '14.320', rotulo: 'questões auditadas sem erro' },
+  { valor: 'R$ 0,00', rotulo: 'custo de produção hoje' },
 ]
 
 export const SECOES = [
@@ -75,10 +75,12 @@ export const SECOES = [
     roteiro: [
       'Para construir este protótipo usamos **React com Vite** no aplicativo, **Supabase** no banco de dados e **Vercel** para publicar na internet.',
       'Os desenhos da cidade são **SVG feitos por nós**, e as fontes e ícones têm **licença livre** — não dependemos de banco de imagens pago.',
-      'O custo para produzir e manter esta versão foi de **R$ 0,00**. Todas as ferramentas têm plano gratuito suficiente para uma escola inteira: o banco de dados cobre **50 mil usuários por mês** sem cobrar nada.',
-      'Na prática, isso quer dizer que **qualquer escola pública pode adotar o Educa+ sem gastar nada**.',
+      'O custo para produzir e manter esta versão **hoje é de R$ 0,00**. Todas as ferramentas têm plano gratuito suficiente para uma escola inteira: o banco de dados cobre **50 mil usuários por mês** sem cobrar nada.',
+      'Isso não significa que o projeto pare aqui. Conforme crescer, há **dois investimentos previstos**: a infraestrutura paga, que só entra acima de 50 mil usuários e fica em torno de **US$ 25 por mês para a rede inteira**; e o **agente de inteligência artificial** que vai gerar questões novas, entre **US$ 1 e US$ 5 a cada mil questões**.',
+      'E repare no detalhe que muda tudo: essa questão gerada uma vez **serve para todos os alunos**. O gasto não se multiplica por aluno.',
+      'Ou seja — mesmo crescendo, **o custo por aluno continua perto de zero**. É exatamente isso que torna o Educa+ viável para a escola pública.',
     ],
-    dica: 'O "R$ 0,00" é o número que mais pega na banca. Diga, espere, e só então explique por quê.',
+    dica: 'Diga "R$ 0,00", faça a pausa, e só então explique. Se a banca perguntar "e quando crescer?", você já tem a resposta pronta: o custo cresce em infraestrutura e IA, mas nunca por aluno.',
   },
   {
     n: 5,
@@ -144,7 +146,11 @@ export const PERGUNTAS = [
   },
   {
     q: 'Quanto custaria para a escola adotar?',
-    a: 'Zero. Os planos gratuitos das ferramentas que usamos cobrem 50 mil usuários ativos por mês. Uma escola inteira cabe nisso com folga.',
+    a: 'Hoje, zero. Os planos gratuitos cobrem 50 mil usuários ativos por mês — uma escola inteira cabe nisso com folga. Passando disso, a infraestrutura paga fica em torno de US$ 25 por mês para a rede toda. O ponto é que esse custo é fixo: ele não se multiplica por aluno.',
+  },
+  {
+    q: 'E o custo da inteligência artificial que vocês pretendem usar?',
+    a: 'Entre US$ 1 e US$ 5 a cada mil questões geradas, e esse gasto acontece uma vez só: a questão criada serve para todos os alunos, de todas as turmas. Por isso a IA não entra como custo recorrente por usuário, e sim como uma ferramenta de autoria que usamos quando queremos ampliar o banco.',
   },
   {
     q: 'Dá para colocar outras matérias ou outro ano?',

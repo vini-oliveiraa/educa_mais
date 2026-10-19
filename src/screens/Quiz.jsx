@@ -96,7 +96,11 @@ export default function Quiz() {
         </div>
 
         <h1 className="qcard__prompt">{question.prompt}</h1>
-        {question.support && <div className="qcard__support">{question.support}</div>}
+        {question.support && (
+          <div className={`qcard__support${question.supportMono ? ' qcard__support--mono' : ''}`}>
+            {question.support}
+          </div>
+        )}
 
         {question.type === 'mc' ? (
           <div className="options">
@@ -232,7 +236,7 @@ function NumericAnswer({ value, onChange, onSubmit, locked, result, unit }) {
   const state = locked ? (result?.correct ? 'right' : 'wrong') : value ? '' : 'empty'
 
   return (
-    <div style={{ marginTop: 'auto' }}>
+    <div style={{ marginTop: 'clamp(18px, 7vh, 56px)' }}>
       <div className={`answer-display${state ? ` answer-display--${state}` : ''}`} aria-live="polite">
         {value ? (
           <span>

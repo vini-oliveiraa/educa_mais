@@ -615,6 +615,7 @@ export default [
         const [n, d] = pergunta === 'dominante' ? [3, 4] : [1, 4]
         return mc({
           prompt: `Cruzando duas plantas heterozigotas (${L}${L.toLowerCase()} × ${L}${L.toLowerCase()}) para a ${c.carac}, qual é a probabilidade de um descendente apresentar a característica ${pergunta === 'dominante' ? `${c.dom} (dominante)` : `${c.rec} (recessiva)`}?`,
+          supportMono: true,
           support: `Quadro de Punnett:\n      ${L}        ${L.toLowerCase()}\n${L}   ${L}${L}      ${L}${L.toLowerCase()}\n${L.toLowerCase()}   ${L}${L.toLowerCase()}      ${L.toLowerCase()}${L.toLowerCase()}`,
           answer: `${n}/${d}`,
           wrong: pickWrong(r, ['1/4', '1/2', '3/4', '1/1', '2/3'], `${n}/${d}`),

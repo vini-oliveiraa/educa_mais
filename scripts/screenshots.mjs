@@ -233,7 +233,10 @@ async function playMission(page, need, suffix = '') {
       await shot(page, `07-feedback-acerto${suffix}.png`)
       need.delete('07')
     }
-    if (!acertou && need.has('08')) {
+    // O print de erro sai de uma questão de múltipla escolha: ela mostra a
+    // alternativa marcada em vermelho e a certa em verde. Na questão digitada
+    // o teclado some depois de responder e sobra meia tela vazia.
+    if (!acertou && !numeric && need.has('08')) {
       await scrollBottom(page)
       await shot(page, `08-feedback-erro${suffix}.png`)
       need.delete('08')

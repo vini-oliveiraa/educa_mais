@@ -20,11 +20,15 @@ export default [
       }
       const list = [...set]
       const alvo = maior ? Math.max(...list) : Math.min(...list)
+      // ATENÇÃO: nada de `list.map(num)`. O map passa o ÍNDICE como 2º
+      // argumento, e `num(valor, casas)` o interpreta como casas decimais —
+      // os números saíam como "149.566 · 212.509,0 · 186.122,00". Além de
+      // feio, entregava a resposta: a correta era sempre a sem decimais.
       return mc({
         prompt: `Observe os números abaixo. Qual deles é o ${maior ? 'MAIOR' : 'MENOR'}?`,
-        support: list.map(num).join('   ·   '),
+        support: list.map((v) => num(v)).join('   ·   '),
         answer: num(alvo),
-        wrong: list.filter((v) => v !== alvo).map(num),
+        wrong: list.filter((v) => v !== alvo).map((v) => num(v)),
         why: `Comparando casa a casa, ${num(alvo)} é o ${maior ? 'maior' : 'menor'} dos quatro números.`,
       })
     },
@@ -40,9 +44,11 @@ export default [
       const pos = r.int(0, 5)
       const algarismo = digitos[pos]
       const valor = algarismo * Math.pow(10, 5 - pos)
-      const nomes = ['centena de milhar', 'dezena de milhar', 'unidade de milhar', 'centena', 'dezena', 'unidade']
+      // O plural é guardado pronto: acrescentar "s" na frase inteira produzia
+      // "unidade de milhars" em vez de "unidades de milhar".
+      const plurais = ['centenas de milhar', 'dezenas de milhar', 'unidades de milhar', 'centenas', 'dezenas', 'unidades']
       return mc({
-        prompt: `No número ${num(numero)}, qual é o valor posicional do algarismo ${algarismo} que ocupa a ordem das ${nomes[pos]}s?`,
+        prompt: `No número ${num(numero)}, qual é o valor posicional do algarismo ${algarismo} que ocupa a ordem das ${plurais[pos]}?`,
         answer: num(valor),
         // Candidatos de sobra: quando o algarismo está na casa das dezenas,
         // `valor / 10` colapsa no próprio algarismo e sobrariam 2 alternativas.
@@ -54,7 +60,7 @@ export default [
           num(algarismo * 10),
           num(valor * 100),
         ]),
-        why: `O algarismo ${algarismo} está na ordem das ${nomes[pos]}s, então vale ${algarismo} × ${num(Math.pow(10, 5 - pos))} = ${num(valor)}.`,
+        why: `O algarismo ${algarismo} está na ordem das ${plurais[pos]}, então vale ${algarismo} × ${num(Math.pow(10, 5 - pos))} = ${num(valor)}.`,
       })
     },
   }),
@@ -629,6 +635,7 @@ export default [
         return input({
           prompt: 'A tabela mostra quantas frutas foram vendidas numa feira.\nQuantas frutas foram vendidas no total?',
           support: `FRUTA      QTD\n${tabela}`,
+          supportMono: true,
           answer: total,
           why: `Somando: ${valores.join(' + ')} = ${total}.`,
         })
@@ -637,6 +644,7 @@ export default [
         return mc({
           prompt: 'Segundo a tabela, qual fruta foi a mais vendida?',
           support: `FRUTA      QTD\n${tabela}`,
+          supportMono: true,
           answer: frutas[maxIdx],
           wrong: frutas.filter((_, i) => i !== maxIdx),
           why: `${frutas[maxIdx]} aparece com ${valores[maxIdx]}, o maior valor da tabela.`,
@@ -645,6 +653,7 @@ export default [
       return input({
         prompt: 'Qual é a diferença entre a quantidade da fruta mais vendida e a da menos vendida?',
         support: `FRUTA      QTD\n${tabela}`,
+        supportMono: true,
         answer: valores[maxIdx] - valores[minIdx],
         why: `Mais vendida: ${frutas[maxIdx]} (${valores[maxIdx]}). Menos vendida: ${frutas[minIdx]} (${valores[minIdx]}). Diferença: ${valores[maxIdx]} − ${valores[minIdx]} = ${valores[maxIdx] - valores[minIdx]}.`,
       })

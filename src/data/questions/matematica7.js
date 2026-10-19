@@ -560,6 +560,7 @@ export default [
       return input({
         prompt: `Um gráfico de setores mostra o esporte preferido de ${num(total)} alunos.\nQuantos alunos preferem ${esportes[idx]}?`,
         support: esportes.map((e, i) => `${e}: ${pcts[i]}%`).join('\n'),
+        supportMono: true,
         answer: (total * pcts[idx]) / 100,
         why: `${pcts[idx]}% de ${num(total)} = ${num(total)} × ${pcts[idx]} ÷ 100 = ${num((total * pcts[idx]) / 100)} alunos.`,
       })

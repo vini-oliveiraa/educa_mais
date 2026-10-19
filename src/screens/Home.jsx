@@ -1,4 +1,4 @@
-import { Check, Target, Flame, Building2, ChevronRight, Swords } from 'lucide-react'
+import { Check, Target, Flame, Building2, ChevronRight, Swords, Coins } from 'lucide-react'
 
 import { useGame, selectLevel } from '../store/useGame.js'
 import { SUBJECTS, GRADES, titleForLevel, levelProgress } from '../data/game.js'
@@ -118,7 +118,7 @@ export default function Home() {
                     disabled={!done}
                     onClick={() => claimDaily(m.id)}
                   >
-                    +{m.reward} 🪙
+                    <Coins size={14} aria-hidden="true" /> +{m.reward}
                   </Button>
                 )}
               </div>

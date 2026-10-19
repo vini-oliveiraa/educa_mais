@@ -31,8 +31,14 @@ export function tpl(def) {
   }
 }
 
-/** Questão de múltipla escolha. */
-export function mc({ prompt, answer, wrong, why, support }) {
+/**
+ * Questão de múltipla escolha.
+ *
+ * `supportMono` marca o texto de apoio como PRÉ-FORMATADO (tabela, quadro de
+ * Punnett, sistema de equações). Sem isso ele é renderizado em fonte
+ * proporcional e as colunas separadas por espaço não alinham.
+ */
+export function mc({ prompt, answer, wrong, why, support, supportMono }) {
   return {
     type: 'mc',
     prompt,
@@ -40,17 +46,19 @@ export function mc({ prompt, answer, wrong, why, support }) {
     options: [String(answer), ...wrong.map(String)],
     why,
     support,
+    supportMono,
   }
 }
 
 /** Questão de resposta digitada (o aluno escreve o número). */
-export function input({ prompt, answer, why, support, unit, decimal }) {
+export function input({ prompt, answer, why, support, supportMono, unit, decimal }) {
   return {
     type: 'input',
     prompt,
     answer: String(answer),
     why,
     support,
+    supportMono,
     unit,
     decimal: decimal ?? String(answer).includes(','),
   }

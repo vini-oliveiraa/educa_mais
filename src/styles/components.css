@@ -769,6 +769,17 @@
   gap: 14px;
   animation: q-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* No desktop a questão não preenche a altura e sobra tela morta embaixo.
+   Aqui o bloco encolhe para o tamanho do conteúdo e fica centralizado. */
+@media (min-width: 900px) and (min-height: 700px) {
+  .quiz {
+    justify-content: center;
+  }
+  .qcard {
+    flex: 0 1 auto;
+  }
+}
 @keyframes q-in {
   from {
     opacity: 0;
@@ -802,10 +813,22 @@
   font-style: italic;
 }
 
+/* Tabelas e quadros são alinhados com espaços. Em fonte proporcional as
+   colunas não batem — daí a monoespaçada. */
+.qcard__support--mono {
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+  overflow-x: auto;
+}
+
+/* As alternativas ficam na metade de baixo, ao alcance do polegar — mas sem
+   serem empurradas até o rodapé: num enunciado curto isso abria um vão de
+   centenas de pixels, pior ainda no desktop. */
 .options {
   display: grid;
   gap: 10px;
-  margin-top: auto;
+  margin-top: clamp(18px, 7vh, 56px);
 }
 .option {
   display: flex;
@@ -1038,6 +1061,8 @@
 /* ------------------------------------------------------------
    Cidade (Meu Mundo)
    ------------------------------------------------------------ */
+/* A proporção acompanha o viewBox do SVG (640x400). Com altura livre sobravam
+   faixas azuis em cima e embaixo, porque o SVG preserva a proporção. */
 .city {
   position: relative;
   border-radius: var(--r-lg);
@@ -1047,7 +1072,8 @@
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  height: clamp(320px, 52vh, 560px);
+  aspect-ratio: 8 / 5;
+  max-height: 62vh;
 }
 .city__svg {
   width: 100%;

@@ -248,6 +248,7 @@ export default [
       return input({
         prompt: `A soma de dois números é ${soma} e a diferença entre eles é ${dif}.\nQual é o ${pedeMaior ? 'MAIOR' : 'MENOR'} deles?`,
         support: `Sistema: x + y = ${soma}\n         x − y = ${dif}`,
+        supportMono: true,
         answer: pedeMaior ? maior : menor,
         why: `Somando as duas equações: 2x = ${soma + dif}, logo x = ${maior}. Substituindo: y = ${soma} − ${maior} = ${menor}.`,
       })

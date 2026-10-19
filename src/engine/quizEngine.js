@@ -101,6 +101,7 @@ function materialize(template, instanceSeed, usedPrompts, ctx) {
     type: raw.type,
     prompt: raw.prompt,
     support: raw.support ?? null,
+    supportMono: Boolean(raw.supportMono),
     options,
     unit: raw.unit ?? null,
     // `decimal` NÃO é exposto: saber que a resposta tem casas decimais já é uma
