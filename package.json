@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "stats": "node scripts/bank-stats.mjs",
     "smoke": "vite build --ssr scripts/ssr-smoke.jsx --outDir .smoke --logLevel warn && node .smoke/ssr-smoke.js",
-    "check": "npm run stats && npm run smoke"
+    "check": "npm run stats && npm run smoke",
+    "prints": "node scripts/screenshots.mjs",
+    "roteiro": "node scripts/gerar-roteiro-pdf.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "playwright-core": "^1.64.1",
+    "qrcode": "^1.5.4",
     "vite": "^5.4.11"
   }
 }

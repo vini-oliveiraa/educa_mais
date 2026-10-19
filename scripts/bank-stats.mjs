@@ -77,6 +77,10 @@ const problems = []
 let generated = 0
 let duplicatesInMission = 0
 const topicHits = new Map()
+// Questão de múltipla escolha com menos de 4 alternativas não quebra nada, mas
+// é mais fácil de acertar no chute. Contabilizamos por template para saber se
+// é um caso raro ou um gerador com distratores que colapsam.
+const poucasAlternativas = new Map()
 
 for (const grade of GRADES) {
   for (const subject of SUBJECTS) {
@@ -121,6 +125,9 @@ for (const grade of GRADES) {
           if (q.type === 'mc') {
             if (!q.options || q.options.length < 2) problems.push({ where, issue: 'menos de 2 alternativas' })
             else {
+              if (q.options.length < 4) {
+                poucasAlternativas.set(where, (poucasAlternativas.get(where) ?? 0) + 1)
+              }
               const norm = q.options.map((o) => o.trim().toLowerCase())
               if (new Set(norm).size !== norm.length) problems.push({ where, issue: 'alternativa repetida' })
               const certas = q.options.filter((o) => checkAnswer(q, o))
@@ -142,6 +149,21 @@ for (const grade of GRADES) {
 console.log(`  Questões geradas ............ ${generated.toLocaleString('pt-BR')}`)
 console.log(`  Assuntos exercitados ........ ${topicHits.size}`)
 console.log(`  Repetições dentro da missão . ${duplicatesInMission}`)
+
+const totalPoucas = [...poucasAlternativas.values()].reduce((a, b) => a + b, 0)
+const pctPoucas = generated === 0 ? 0 : (100 * totalPoucas) / generated
+console.log(`  MC com menos de 4 alternativas ${totalPoucas} (${pctPoucas.toFixed(1)}%)`)
+
+// Acima de 2% é sinal de gerador com distratores que colapsam, não de azar.
+if (pctPoucas > 2) {
+  console.log(`
+  ⚠️  Geradores com distratores insuficientes:`)
+  ;[...poucasAlternativas.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .forEach(([id, n]) => console.log(`   ${String(n).padStart(5)}x  ${id}`))
+  console.log(`   Use take3() com mais candidatos nesses templates.`)
+}
 
 // Agrupa os problemas por tipo para o relatório não virar um muro de texto.
 const grouped = new Map()

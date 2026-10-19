@@ -1,5 +1,5 @@
 import {
-  tpl, mc, input, numDistract, numDistractFmt, pickWrong,
+  tpl, mc, input, numDistract, numDistractFmt, pickWrong, take3,
   num, gcd, reduceFraction, NAMES, ITEMS, CONTAINERS, FRUITS, SPORTS, PLACES,
 } from './helpers.js'
 
@@ -44,7 +44,16 @@ export default [
       return mc({
         prompt: `No número ${num(numero)}, qual é o valor posicional do algarismo ${algarismo} que ocupa a ordem das ${nomes[pos]}s?`,
         answer: num(valor),
-        wrong: [num(algarismo), num(valor / 10 || algarismo * 10), num(valor * 10)],
+        // Candidatos de sobra: quando o algarismo está na casa das dezenas,
+        // `valor / 10` colapsa no próprio algarismo e sobrariam 2 alternativas.
+        wrong: take3(num(valor), [
+          num(algarismo),                       // ignorou a posição
+          num(valor * 10),                      // errou uma casa para mais
+          num(valor / 10),                      // errou uma casa para menos
+          num(Math.pow(10, 5 - pos)),           // leu só a potência
+          num(algarismo * 10),
+          num(valor * 100),
+        ]),
         why: `O algarismo ${algarismo} está na ordem das ${nomes[pos]}s, então vale ${algarismo} × ${num(Math.pow(10, 5 - pos))} = ${num(valor)}.`,
       })
     },
@@ -339,8 +348,16 @@ export default [
       return mc({
         prompt: `Arredondando ${num(n)} para a ${casas === 100 ? 'centena' : 'unidade de milhar'} mais próxima, obtemos:`,
         answer: num(arred),
-        wrong: [num(arred + casas), num(arred - casas), num(Math.floor(n / casas) * casas === arred ? arred + 2 * casas : Math.floor(n / casas) * casas)]
-          .filter((v, i, a) => v !== num(arred) && a.indexOf(v) === i).slice(0, 3),
+        // Truncar e arredondar dão o mesmo valor em metade dos casos, por isso
+        // a lista é maior do que o necessário.
+        wrong: take3(num(arred), [
+          num(arred + casas),                   // passou uma casa
+          num(arred - casas),                   // voltou uma casa
+          num(Math.floor(n / casas) * casas),   // truncou em vez de arredondar
+          num(Math.ceil(n / casas) * casas),    // arredondou sempre para cima
+          num(arred + 2 * casas),
+          num(Math.round(n / (casas * 10)) * casas * 10), // arredondou na ordem errada
+        ]),
         why: `Olhamos o algarismo seguinte à ${casas === 100 ? 'centena' : 'unidade de milhar'}: ${num(n)} fica mais perto de ${num(arred)}.`,
       })
     },

@@ -26,6 +26,8 @@ Outros comandos:
 | `npm run stats` | Relatório do banco de questões + gera e valida ~14 mil questões |
 | `npm run smoke` | Renderiza todas as telas no servidor e simula 72 missões completas |
 | `npm run check` | Roda os dois acima |
+| `npm run prints` | Captura os screenshots do app em `docs/prints/` (dirige o Chrome) |
+| `npm run roteiro` | Gera o PDF de apoio à apresentação em `docs/` |
 
 O dev server sobe com `host: true`, então dá para abrir pelo celular na mesma rede
 (`http://<ip-da-máquina>:5173`) — útil para testar o layout mobile de verdade.
@@ -45,9 +47,50 @@ O dev server sobe com `host: true`, então dá para abrir pelo celular na mesma 
 | Cidade isométrica com 19 construções | ✅ SVG próprio, com pan/zoom e demolição |
 | Missões diárias e 18 conquistas | ✅ |
 | Perfil, estatísticas por matéria, export/import do save | ✅ |
-| Banco de dados real / contas | ⏳ ver [docs/ARQUITETURA.md](docs/ARQUITETURA.md#1-banco-de-dados-e-contas-de-usuário) |
-| Validação da resposta no servidor | ⏳ idem |
+| Banco de dados (Supabase) | ✅ esquema, RLS, RPCs e relatórios — ver [supabase/README.md](supabase/README.md) |
+| Publicação (Vercel) | ✅ `vercel.json` com rewrite de SPA e cache dos assets |
+| Roteiro de apresentação em PDF | ✅ `npm run roteiro` |
+| Validação da resposta no servidor | ⏳ ver [docs/ARQUITETURA.md](docs/ARQUITETURA.md#2-validação-da-resposta-no-servidor) |
 | Geração de questões por LLM | ⏳ idem |
+| Painel do professor (interface) | ⏳ as views SQL já existem; falta a tela |
+
+---
+
+---
+
+## Modo local e modo nuvem
+
+O app roda de duas formas, decididas por variável de ambiente:
+
+| | sem `.env.local` | com `.env.local` |
+|---|---|---|
+| Entrada | avatar + nome, direto | código de turma + apelido |
+| Progresso | localStorage daquele navegador | Supabase, acompanha o aluno |
+| Internet | dispensável | só para sincronizar |
+| Painel do professor | — | relatórios por habilidade da BNCC |
+
+O modo local é o da demo: zero backend, zero custo, nenhum dado sai do
+aparelho. Para ligar a nuvem, siga [supabase/README.md](supabase/README.md) —
+leva uns 15 minutos.
+
+**Decisão de projeto:** no modo nuvem o aluno entra com código de turma e
+apelido. Não pedimos e-mail, nome completo nem data de nascimento. O art. 14 da
+LGPD exige consentimento dos pais para tratar dado de criança; não coletando,
+o projeto fica fora do escopo mais pesado da lei.
+
+---
+
+## Publicando
+
+```bash
+npx vercel login      # uma vez
+npx vercel --prod
+```
+
+O `vercel.json` já traz o rewrite de SPA, cache imutável nos assets e
+cabeçalhos de segurança. Se for usar o modo nuvem, cadastre
+`VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em **Settings → Environment
+Variables** antes do deploy.
 
 ---
 
