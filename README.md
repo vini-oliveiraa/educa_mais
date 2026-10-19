@@ -26,6 +26,7 @@ Outros comandos:
 | `npm run stats` | Relatório do banco de questões + gera e valida ~14 mil questões |
 | `npm run smoke` | Renderiza todas as telas no servidor e simula 72 missões completas |
 | `npm run check` | Roda os dois acima |
+| `npm run doctor` | Diagnostica a conexão com o Supabase (tabelas, views, login anônimo) |
 | `npm run prints` | Captura os screenshots do app em `docs/prints/` (dirige o Chrome) |
 | `npm run roteiro` | Gera o PDF de apoio à apresentação em `docs/` |
 
